@@ -131,7 +131,11 @@ angular.module('RedhatAccess.cases').controller('DetailsSection', [
                         if ($scope.caseDetails.owner !== undefined && $scope.caseDetails.owner.$dirty) {
                             $scope.changeCaseOwner();
                         }
-                        AlertService.addStrataErrorMessage(error);
+                        var statusCode = (error && error.xhr && error.xhr.status);
+                        var isError = (!statusCode || (statusCode < 200 || statusCode >= 400));
+                        if (isError) {
+                            AlertService.addStrataErrorMessage(error);
+                        }
                         $scope.updatingDetails = false;
                         if ($scope.$root.$$phase !== '$apply' && $scope.$root.$$phase !== '$digest') {
                             $scope.$apply();
